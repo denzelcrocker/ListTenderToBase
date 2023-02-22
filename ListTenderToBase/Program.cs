@@ -1,6 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
 namespace ListTenderToBase
 {
+    //public class Platforms
+    //{ 
+    //    public int PlatformId { get; set; }
+    //    public string? NameOfPlatform { get; set; }
+    //    public string? AddressOfPlatform { get; set; }
+    //    public List<Procurement> Procurement { get; set; }
+    //}
     public class Procurement
     {
         public int ID { get; set; }
@@ -42,10 +51,21 @@ namespace ListTenderToBase
                 Procurement procurement = new Procurement
                 {
                     Number = source.listProcurement[0],
-                    DeadlineEnd = Convert.ToDateTime("24.10.2003 18:34"), PlatformId = 1, InitialPrice = Convert.ToDecimal(34535.34)
+                    Address = source.listProcurement[1],
+                    Method = source.listProcurement[2],
+                    Act = source.listProcurement[3],
+                    PlatformId = 1,
+                    TimeZoneId = 1,
+                    OrganizationId = 1,
+                    DeadlineStart = Convert.ToDateTime(source.listProcurement[6]),
+                    DeadlineEnd = Convert.ToDateTime(source.listProcurement[7]),
+                    InitialPrice = Convert.ToDecimal(source.listProcurement[8]),
+                    ProcurementObject = source.listProcurement[11],
+                    PlaceOfDelivery = source.listProcurement[12],
+                    SupplyAssurance = source.listProcurement[13],
+                    Enforcement = source.listProcurement[14],
+                    ProvidingAGuarantee = source.listProcurement[15]
                 };
-
-                // добавляем их в бд
                 db.Procurements.AddRange(procurement);
                 db.SaveChanges();
             }
@@ -53,11 +73,27 @@ namespace ListTenderToBase
             using (ApplicationContext db = new ApplicationContext())
             {
                 // получаем объекты из бд и выводим на консоль
-                var users = db.Procurements.ToList();
-                Console.WriteLine("Users list:");
-                foreach (Procurement u in users)
+                var items = db.Procurements.ToList();
+                Console.WriteLine("Procurements list:");
+                foreach (Procurement u in items)
                 {
-                    Console.WriteLine($"{u.ID}.{u.DeadlineEnd:g} - {u.PlatformId} - {u.Number}");
+                    Console.WriteLine($"Номер тендера: {u.ID}\n" +
+                                      $"Номер на госзакупках: {u.Number}\n" +
+                                      $"Адрес: {u.Address}\n" +
+                                      $"Способ определения поставщика: {u.Method}\n" +
+                                      $"Закон: {u.Act}\n" +
+                                      $"Наименование электронной площадки: \n" +
+                                      $"Ссылка на электронную площадку: \n" +
+                                      $"Дата начала подачи заявок: {u.DeadlineStart:g}\n" +
+                                      $"Дата окончания подачи заявок: {u.DeadlineEnd:g}\n" +
+                                      $"Начальная цена: {u.InitialPrice}\n" +
+                                      $"Организация, осуществляющая закупку: \n" +
+                                      $"Адрес организации, осуществляющей закупку: \n" +
+                                      $"Объект закупки: {u.ProcurementObject}\n" +
+                                      $"Место доставки товара: {u.PlaceOfDelivery}\n" +
+                                      $"Обеспечение подачи заявки: {u.SupplyAssurance}\n" +
+                                      $"Обеспечение исполнения заявки: {u.Enforcement}\n" +
+                                      $"Обеспечение гарантии заявки: {u.ProvidingAGuarantee}\n");
                 }
             }
         }
