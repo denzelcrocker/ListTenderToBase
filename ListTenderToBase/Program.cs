@@ -10,25 +10,7 @@ namespace ListTenderToBase
     //    public string? AddressOfPlatform { get; set; }
     //    public List<Procurement> Procurement { get; set; }
     //}
-    public class Procurement
-    {
-        public int ID { get; set; }
-        public string? Number { get; set; }
-        public string? Address { get; set; }
-        public string? Method { get; set; }
-        public string? Act { get; set; }
-        public int PlatformId { get; set; }
-        public DateTime? DeadlineStart { get; set; }
-        public DateTime? DeadlineEnd { get; set; }
-        public int TimeZoneId { get; set; }
-        public decimal? InitialPrice { get; set; }
-        public int OrganizationId { get; set; }
-        public string? ProcurementObject { get; set; }
-        public string? PlaceOfDelivery { get; set; }
-        public string? SupplyAssurance { get; set; }
-        public string? Enforcement { get; set; }
-        public string? ProvidingAGuarantee { get; set; }
-    }
+    
     public class ApplicationContext : DbContext
     {
         public DbSet<Procurement> Procurements { get; set; } = null!;
@@ -64,7 +46,7 @@ namespace ListTenderToBase
                     PlaceOfDelivery = source.listProcurement[12],
                     SupplyAssurance = source.listProcurement[13],
                     Enforcement = source.listProcurement[14],
-                    ProvidingAGuarantee = source.listProcurement[15]
+                    ProvidingAguarantee = source.listProcurement[15]
                 };
                 db.Procurements.AddRange(procurement);
                 db.SaveChanges();
@@ -77,7 +59,7 @@ namespace ListTenderToBase
                 Console.WriteLine("Procurements list:");
                 foreach (Procurement u in items)
                 {
-                    Console.WriteLine($"Номер тендера: {u.ID}\n" +
+                    Console.WriteLine($"Номер тендера: {u.Id}\n" +
                                       $"Номер на госзакупках: {u.Number}\n" +
                                       $"Адрес: {u.Address}\n" +
                                       $"Способ определения поставщика: {u.Method}\n" +
@@ -93,7 +75,7 @@ namespace ListTenderToBase
                                       $"Место доставки товара: {u.PlaceOfDelivery}\n" +
                                       $"Обеспечение подачи заявки: {u.SupplyAssurance}\n" +
                                       $"Обеспечение исполнения заявки: {u.Enforcement}\n" +
-                                      $"Обеспечение гарантии заявки: {u.ProvidingAGuarantee}\n");
+                                      $"Обеспечение гарантии заявки: {u.ProvidingAguarantee}\n");
                 }
             }
         }
