@@ -9,7 +9,7 @@ public partial class Organization
 
     public string? NameOfOrganization { get; set; }
 
-    public string? AddressOfOrganisation { get; set; }
+    public string? AddressOfOrganization { get; set; }
 
     public virtual ICollection<Procurement> Procurements { get; } = new List<Procurement>();
 }
