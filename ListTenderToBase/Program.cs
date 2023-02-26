@@ -10,6 +10,9 @@ namespace ListTenderToBase
         public DbSet<Platform> Platforms { get; set; } = null!;
         public DbSet<Organization> Organizations { get; set; } = null!;
         public DbSet<TimeZone> TimeZones { get; set; } = null!;
+        public DbSet<Act> Acts { get; set; } = null!;
+        public DbSet<Method> Methods { get; set; } = null!;
+
 
 
 
@@ -28,12 +31,56 @@ namespace ListTenderToBase
             Platform platform= new Platform();
             Organization organization = new Organization();
             TimeZone timeZone = new TimeZone();
+            Method method = new Method();
+            Act act = new Act();
             using (ApplicationContext db = new ApplicationContext())
             {
                 procurement.Number = source.listProcurement[0];
                 procurement.Address = source.listProcurement[1];
-                procurement.Method = source.listProcurement[2];
-                procurement.Act = source.listProcurement[3];
+                var methodElement = db.Methods.ToList();
+                bool isMethodExists = true;
+                foreach (Method u in methodElement)
+                {
+                    if (u.NameOfMethod == source.listProcurement[2])
+                    {
+                        procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == source.listProcurement[2]).FirstOrDefault().MethodId;
+                        isMethodExists = true;
+                        break;
+                    }
+                    else
+                    {
+                        isMethodExists = false;
+                    }
+                }
+                if (isMethodExists == false)
+                {
+                    method.NameOfMethod = source.listProcurement[2];
+                    db.Methods.AddRange(method);
+                    db.SaveChanges();
+                    procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == source.listProcurement[2]).FirstOrDefault().MethodId;
+                }
+                var actElement = db.Acts.ToList();
+                bool isActExists = true;
+                foreach (Act u in actElement)
+                {
+                    if (u.NameOfAct == source.listProcurement[3])
+                    {
+                        procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == source.listProcurement[3]).FirstOrDefault().ActId;
+                        isActExists = true;
+                        break;
+                    }
+                    else
+                    {
+                        isActExists = false;
+                    }
+                }
+                if (isActExists == false)
+                {
+                    act.NameOfAct = source.listProcurement[3];
+                    db.Acts.AddRange(act);
+                    db.SaveChanges();
+                    procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == source.listProcurement[3]).FirstOrDefault().ActId;
+                }
                 var platformElement = db.Platforms.ToList();
                 bool isPlatformExists = true;
                 foreach (Platform u in platformElement)
@@ -128,8 +175,8 @@ namespace ListTenderToBase
                     Console.WriteLine($"Номер тендера: {u.Id}\n" +
                                       $"Номер на госзакупках: {u.Number}\n" +
                                       $"Адрес: {u.Address}\n" +
-                                      $"Способ определения поставщика: {u.Method}\n" +
-                                      $"Закон: {u.Act}\n" +
+                                      $"Способ определения поставщика: {db.Methods.ToList().Where(x => x.MethodId == u.MethodId).FirstOrDefault().NameOfMethod}\n" +
+                                      $"Закон: {db.Acts.ToList().Where(x => x.ActId == u.ActId).FirstOrDefault().NameOfAct}\n" +
                                       $"Наименование электронной площадки: {db.Platforms.ToList().Where(x => x.PlatformId == u.PlatformId).FirstOrDefault().NameOfPlatform}\n" +
                                       $"Ссылка на электронную площадку: {db.Platforms.ToList().Where(x => x.PlatformId == u.PlatformId).FirstOrDefault().AddressOfPlatform}\n" +
                                       $"Дата начала подачи заявок: {u.DeadlineStart:g} (МСК{db.TimeZones.ToList().Where(x => x.TimeZoneId == u.TimeZoneId).FirstOrDefault().Code})\n" +

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ListTenderToBase;
 
-public partial class TimeZone
+public partial class Act
 {
-    public int TimeZoneId { get; set; }
+    public int ActId { get; set; }
 
-    public short? Code { get; set; }
+    public string? NameOfAct { get; set; }
 
     public virtual ICollection<Procurement> Procurements { get; } = new List<Procurement>();
 }

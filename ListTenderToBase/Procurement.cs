@@ -11,9 +11,9 @@ public partial class Procurement
 
     public string? Address { get; set; }
 
-    public string? Method { get; set; }
+    public int? MethodId { get; set; }
 
-    public string? Act { get; set; }
+    public int? ActId { get; set; }
 
     public int? PlatformId { get; set; }
 
@@ -36,6 +36,10 @@ public partial class Procurement
     public string? Enforcement { get; set; }
 
     public string? ProvidingAguarantee { get; set; }
+
+    public virtual Act? Act { get; set; }
+
+    public virtual Method? Method { get; set; }
 
     public virtual Organization? Organization { get; set; }
 

@@ -15,6 +15,10 @@ public partial class BaseForGraduationProjectContext : DbContext
     {
     }
 
+    public virtual DbSet<Act> Acts { get; set; }
+
+    public virtual DbSet<Method> Methods { get; set; }
+
     public virtual DbSet<Organization> Organizations { get; set; }
 
     public virtual DbSet<Platform> Platforms { get; set; }
@@ -41,6 +45,14 @@ public partial class BaseForGraduationProjectContext : DbContext
             entity.Property(e => e.DeadlineStart).HasPrecision(0);
             entity.Property(e => e.InitialPrice).HasColumnType("decimal(19, 2)");
             entity.Property(e => e.ProvidingAguarantee).HasColumnName("ProvidingAGuarantee");
+
+            entity.HasOne(d => d.Act).WithMany(p => p.Procurements)
+                .HasForeignKey(d => d.ActId)
+                .HasConstraintName("FK_Procurements_Acts");
+
+            entity.HasOne(d => d.Method).WithMany(p => p.Procurements)
+                .HasForeignKey(d => d.MethodId)
+                .HasConstraintName("FK_Procurements_Methods");
 
             entity.HasOne(d => d.Organization).WithMany(p => p.Procurements)
                 .HasForeignKey(d => d.OrganizationId)
