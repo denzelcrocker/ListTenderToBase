@@ -59,11 +59,15 @@ namespace ListTenderToBase
                 }
                 var timeZoneElement = db.TimeZones.ToList();
                 bool isTimeZoneExists = true;
+                if (source.listProcurement[16] == "")
+                {
+                    source.listProcurement[16] = "0";
+                }
                 foreach (TimeZone u in timeZoneElement)
                 {
-                    if (u.Code == source.listProcurement[16])
+                    if (u.Code == Convert.ToInt16(source.listProcurement[16]))
                     {
-                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == source.listProcurement[16]).FirstOrDefault().TimeZoneId;
+                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(source.listProcurement[16])).FirstOrDefault().TimeZoneId;
                         isTimeZoneExists = true;
                         break;
                     }
@@ -74,10 +78,10 @@ namespace ListTenderToBase
                 }
                 if (isTimeZoneExists == false)
                 {
-                    timeZone.Code = source.listProcurement[16];
+                    timeZone.Code = Convert.ToInt16(source.listProcurement[16]);
                     db.TimeZones.AddRange(timeZone);
                     db.SaveChanges();
-                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == source.listProcurement[16]).FirstOrDefault().TimeZoneId;
+                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(source.listProcurement[16])).FirstOrDefault().TimeZoneId;
                 }
                 var organizationElement = db.Organizations.ToList();
                 bool isOrganizationExists = true;
@@ -128,8 +132,8 @@ namespace ListTenderToBase
                                       $"Закон: {u.Act}\n" +
                                       $"Наименование электронной площадки: {db.Platforms.ToList().Where(x => x.PlatformId == u.PlatformId).FirstOrDefault().NameOfPlatform}\n" +
                                       $"Ссылка на электронную площадку: {db.Platforms.ToList().Where(x => x.PlatformId == u.PlatformId).FirstOrDefault().AddressOfPlatform}\n" +
-                                      $"Дата начала подачи заявок: {u.DeadlineStart:g} {db.TimeZones.ToList().Where(x => x.TimeZoneId == u.TimeZoneId).FirstOrDefault().Code}\n" +
-                                      $"Дата окончания подачи заявок: {u.DeadlineEnd:g} {db.TimeZones.ToList().Where(x => x.TimeZoneId == u.TimeZoneId).FirstOrDefault().Code}\n" +
+                                      $"Дата начала подачи заявок: {u.DeadlineStart:g} (МСК{db.TimeZones.ToList().Where(x => x.TimeZoneId == u.TimeZoneId).FirstOrDefault().Code})\n" +
+                                      $"Дата окончания подачи заявок: {u.DeadlineEnd:g} (МСК{db.TimeZones.ToList().Where(x => x.TimeZoneId == u.TimeZoneId).FirstOrDefault().Code})\n" +
                                       $"Начальная цена: {u.InitialPrice}\n" +
                                       $"Организация, осуществляющая закупку: {db.Organizations.ToList().Where(x => x.OrganizationId == u.OrganizationId).FirstOrDefault().NameOfOrganization}\n" +
                                       $"Адрес организации, осуществляющей закупку: {db.Organizations.ToList().Where(x => x.OrganizationId == u.OrganizationId).FirstOrDefault().AddressOfOrganization}\n" +
