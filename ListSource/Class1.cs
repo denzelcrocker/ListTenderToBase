@@ -33,7 +33,7 @@ namespace ListSource {
             while (true) {
                 try {
                     using HttpClient httpClient = new();
-                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0338300012023000007").Result;
+                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0288100000223000010").Result;
 
                     break;
                 }
@@ -43,7 +43,7 @@ namespace ListSource {
             string input = Encoding.UTF8.GetString(bytes);
 
             listProcurement[0] = Number.GetString(input);
-            listProcurement[1] = "https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0338300012023000007";
+            listProcurement[1] = "https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0817200000323001437";
             listProcurement[2] = Identifying.GetString(input);
             listProcurement[3] = Law.GetString(input);
             listProcurement[4] = Place.GetString(input);
@@ -57,7 +57,8 @@ namespace ListSource {
             listProcurement[12] = Location.GetString(input);
             listProcurement[13] = "";
             listProcurement[14] = "";
-            listProcurement[15] = "-2";
+            listProcurement[15] = "";
+            listProcurement[16] = "-2";
         }
 
 
@@ -72,21 +73,21 @@ namespace ListSource {
         }
 
         public sealed class Identifying {
-            static readonly Regex regex = new(@"<span class=""cardMainInfo__title distancedText ml-1"">\n                            (?<val>.*?)\n(?<space>.*?)</span>", options);
+            static readonly Regex regex = new(@"title"">Способ(?<space>.)>(?<space>.)>(?<val>.*)<", options);
 
             public static string GetString(string input) {
                 string value;
-                value = regex.Split(input)[1];
+                value = regex.Split(input)[2];
                 return value;
             }
         }
 
         public sealed class Number {
-            static readonly Regex regex = new(@"<a href=""#"" target=""_blank"">№ (?<val>.*?)</a>", options);
+            static readonly Regex regex = new(@"<a(?<space>.*?)target=""_blank""(?<space>.*?)№ (?<val>.*?)</a>", options);
 
             public static string GetString(string input) {
                 string value;
-                value = regex.Split(input)[1];
+                value = regex.Split(input)[2];
                 return value;
             }
         }
@@ -202,21 +203,21 @@ namespace ListSource {
         }
 
         public sealed class DateStart {
-            static readonly Regex regex = new(@"Дата и время начала срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span(?<space>.*?)>(?<valSecond>.*?)</span>", options);
+            static readonly Regex regex = new(@"Дата и время начала срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span", options);
 
             public static string GetString(string input) {
                 string value;
-                value = $"{regex.Split(input)[2]} {regex.Split(input)[3]}";
+                value = $"{regex.Split(input)[2]}";
                 return value;
             }
         }
 
         public sealed class DateEnd {
-            static readonly Regex regex = new(@"Дата и время окончания срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span(?<space>.*?)>(?<valSecond>.*?)</span>", options);
+            static readonly Regex regex = new(@"Дата и время окончания срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span", options);
 
             public static string GetString(string input) {
                 string value;
-                value = $"{regex.Split(input)[2]} {regex.Split(input)[3]}";
+                value = $"{regex.Split(input)[2]}";
                 return value;
             }
         }
