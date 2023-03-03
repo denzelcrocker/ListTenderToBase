@@ -1,30 +1,25 @@
-﻿using System.Numerics;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Diagnostics;
-
-namespace ListSource {
+﻿namespace ListSource {
     public class ListSource {
         public static RegexOptions options = RegexOptions.Compiled | RegexOptions.Singleline;
-        public List<string> listProcurement = new List<string>()
+        public static List<string> listProcurement = new()
         {
-            "0853500000323000731",//номер на госзакупках
-            "https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0853500000323000731",//ссылка на тендер
-            "Электронный аукцион",//способ определения поставщика
-            "43-ФЗ",//закон
-            "АО «Сбербанк-АСТ»",//наименование электронной площадки
-            "http://www.sberbank-ast.ru",//ссылка на электронную площадку
-            "14.02.2023 15:18",//дата начала подачи заявок
-            "22.02.2023 09:00",//дата окончания подачи заявок
-            "1 238 692,00",//начальная цена
-            "ГОСУДАРСТВЕННОЕ КАЗЕННОЕ УЧРЕЖДЕНИЕ ОРЕНБУРГСКОЙ ОБЛАСТИ ЦЕНТР ОРГАНИЗАЦИИ ЗАКУПОК",//организация, осуществляющая закупку
-            "460006, ОРЕНБУРГСКАЯ ОБЛАСТЬ, ГОРОД ОРЕНБУРГ, УЛИЦА КОМСОМОЛЬСКАЯ, ДОМ 122",//адрес организации, осуществляющей закупку
-            "оказание услуг по техническому обслуживанию комплексов обработки избирательных бюллетеней КОИБ-2017",//объект закупки
-            "460006, ОРЕНБУРГСКАЯ ОБЛАСТЬ, ГОРОД ОРЕНБУРГ, УЛИЦА КОМСОМОЛЬСКАЯ, ДОМ 122",//место доставки товара
-            "",//обеспечение подачи
-            "",//обеспечение исполнения
-            "",//обеспечение гарантии
-            "-2"//часовой пояс
+            "—",//номер на госзакупках
+            "—",//ссылка на тендер
+            "—",//способ определения поставщика
+            "—",//закон
+            "—",//наименование электронной площадки
+            "—",//ссылка на электронную площадку
+            "—",//дата начала подачи заявок
+            "—",//дата окончания подачи заявок
+            "—",//начальная цена
+            "—",//организация, осуществляющая закупку
+            "—",//адрес организации, осуществляющей закупку
+            "—",//объект закупки
+            "—",//место доставки товара
+            "—",//обеспечение подачи
+            "—",//обеспечение исполнения
+            "—",//обеспечение гарантии
+            "—"//часовой пояс
         };
 
         public ListSource() {
@@ -56,168 +51,210 @@ namespace ListSource {
             listProcurement[11] = Objects.GetString(input);
             listProcurement[12] = Location.GetString(input);
             listProcurement[13] = "";
-            listProcurement[14] = "";
+            listProcurement[14] = Security.GetString(input);
             listProcurement[15] = "";
-            listProcurement[16] = "-2";
+            listProcurement[16] = UTC.GetString(input);
         }
 
 
-        public sealed class Law {
-            static readonly Regex regex = new(@"<div class=""cardMainInfo__title d-flex text-truncate""\n(?<space>.*?)\n(?<space>.*?)>(?<val>.*?)\n(?<space>.*?)</div>", options);
+        public sealed class Number {
+            private static readonly Regex regex = new(@">№ (?<val>.*?)<", options);
 
             public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[1]}";
+                }
+                catch { }
                 return value;
             }
         }
 
         public sealed class Identifying {
-            static readonly Regex regex = new(@"title"">Способ(?<space>.)>(?<space>.)>(?<val>.*)<", options);
+            private static readonly Regex regex44 = new(@"Способ(?<space>.*?)\n(?<space>.*?)info"">(?<val>.*?)<", options);
+            private static readonly Regex regex223 = new(@"Способ(?<space>.*?)\n(?<space>.*?)\n *(?<val>.*?)\n", options);
 
             public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
+                string value = "—";
+                try {
+                    value = regex44.Split(input)[2];
+                }
+                catch {
+                    value = regex223.Split(input)[2];
+                }
                 return value;
             }
         }
 
-        public sealed class Number {
-            static readonly Regex regex = new(@"<a(?<space>.*?)target=""_blank""(?<space>.*?)№ (?<val>.*?)</a>", options);
+        public sealed class Law {
+            private static readonly Regex regex44 = new(@"<div class=""cardMainInfo__title d-flex text-truncate""\n(?<space>.*?)\n(?<space>.*?)>(?<val>.*?)\n(?<space>.*?)</div>", options);
+            private static readonly Regex regex223 = new(@"<div class=""registry-entry__header-top__title"">\n *(?<val>.*?) ", options);
 
             public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Objects {
-            static readonly Regex regex = new(@"<span class=""cardMainInfo__content"">(?<val>.*?)</span>", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[1];
-                return value;
-            }
-        }
-
-        public sealed class Requester {
-            static readonly Regex regex = new(@"<a href=""https://zakupki.gov.ru/epz/organization(?<space>.*?)"" target=""_blank"">(?<val>.*?)</a>", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Cost {
-            static readonly Regex regex = new(@"<span class=""cardMainInfo__content cost"">\n                        (?<val>.*?) &#8381;", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[1];
+                string value = "—";
+                try {
+                    value = regex44.Split(input)[2];
+                }
+                catch {
+                    value = regex223.Split(input)[1];
+                }
+                value = value.Replace("&#034;", "\"");
                 return value;
             }
         }
 
         public sealed class Place {
-            static readonly Regex regex = new(@"Наименование электронной площадки(?<space>.*?)</span>(?<space>.*?)>(?<val>.*?)<", options);
+            private static readonly Regex regex44 = new(@"Наименование электронной площадки(?<space>.*?)>\n(?<space>.*?)info"">(?<val>.*?)</", options);
+            private static readonly Regex regex223 = new(@"Наименование электронной площадки(?<space>.*?)>\n(?<space>.*?)>\n *(?<val>.*?)\n", options);
 
             public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
+                string value = "—";
+                if (listProcurement[3] == "44-ФЗ") {
+                    value = regex44.Split(input)[2];
+                }
+                else {
+                    value = regex223.Split(input)[2];
+                }
                 return value;
             }
         }
 
         public sealed class PlaceUrl {
-            static readonly Regex regex = new(@"Адрес электронной площадки(?<space>.*?)</span>(?<space>.*?)href=""(?<val>.*?)""", options);
+            private static readonly Regex regex44 = new(@"Адрес электронной площадки(?<space>.*?)</span>(?<space>.*?)href=""(?<val>.*?)""", options);
+            private static readonly Regex regex223 = new(@"Адрес электронной площадки(?<space>.*?)>\n(?<space>.*?)>\n(?<space>.*?)href=""(?<val>.*?)""", options);
 
             public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class PostAddress {
-            static readonly Regex regex = new(@"Почтовый адрес</span>(?<space>.*?)\n                    (?<val>.*?)\n", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Location {
-            static readonly Regex regex = new(@"Место нахождения</span>(?<space>.*?)\n                    (?<val>.*?)\n", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Responsible {
-            static readonly Regex regex = new(@"Ответственное должностное лицо</span>(?<space>.*?)\n                    (?<val>.*?)<", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Email {
-            static readonly Regex regex = new(@"Адрес электронной почты</span>(?<space>.*?)                        (?<val>.*?)\n", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Phone {
-            static readonly Regex regex = new(@"Номер контактного телефона</span>(?<space>.*?)                    (?<val>.*?)\n", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
-                return value;
-            }
-        }
-
-        public sealed class Fax {
-            static readonly Regex regex = new(@"Факс</span>(?<space>.*?)>(?<val>.*?)<", options);
-
-            public static string GetString(string input) {
-                string value;
-                value = regex.Split(input)[2];
+                string value = "—";
+                if (listProcurement[3] == "44-ФЗ") {
+                    value = regex44.Split(input)[2];
+                }
+                else {
+                    value = regex223.Split(input)[2];
+                }
                 return value;
             }
         }
 
         public sealed class DateStart {
-            static readonly Regex regex = new(@"Дата и время начала срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span", options);
+            private static readonly Regex regex = new(@"начала(?<space>.*?)>\n(?<space>.*?)\n *(?<val>..\...\..... ..:..)", options);
 
             public static string GetString(string input) {
-                string value;
-                value = $"{regex.Split(input)[2]}";
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
                 return value;
             }
         }
 
         public sealed class DateEnd {
-            static readonly Regex regex = new(@"Дата и время окончания срока подачи заявок</span>(?<space>.*?)\n                    (?<valFirst>.*?) <span", options);
+            private static readonly Regex regex = new(@"окончания(?<space>.*?)>\n(?<space>.*?)\n *(?<val>..\...\..... ..:..)", options);
 
             public static string GetString(string input) {
-                string value;
-                value = $"{regex.Split(input)[2]}";
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                return value;
+            }
+        }
+
+        public sealed class Cost {
+            private static readonly Regex regex = new(@"Начальная цена(?<space>.*?)>\n(?<space>.*?)>\n *(?<val>.*?,..)", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                return value;
+            }
+        }
+
+        public sealed class Requester {
+            private static readonly Regex regex44 = new(@"<a href=""(?<space>.*?)epz/organization/view(?<space>.*?)>(?<val>.*?)<", options);
+            private static readonly Regex regex223 = new(@"padding"">(?<space>.*?)<a href=""(?<space>.*?)epz/organization/view(?<space>.*?)>(?<val>.*?)</a>", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                if (listProcurement[3] == "44-ФЗ") {
+                    value = regex44.Split(input)[2];
+                }
+                else {
+                    value = regex223.Split(input)[2];
+                }
+                return value;
+            }
+        }
+
+        public sealed class PostAddress {
+            private static readonly Regex regex = new(@"Почтовый адрес(?<space>.*?)>\n(?<space>.*?)\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                return value;
+            }
+        }
+
+        public sealed class Objects {
+            private static readonly Regex regex44 = new(@"Объект закупки</span>\n(?<space>.*?)>(?<val>.*?)<", options);
+            private static readonly Regex regex223 = new(@"Объект закупки</div>\n(?<space>.*?)\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                if (listProcurement[3] == "44-ФЗ") {
+                    value = regex44.Split(input)[2];
+                }
+                else {
+                    value = regex223.Split(input)[2];
+                }
+                return value;
+            }
+        }
+
+        public sealed class Location {
+            private static readonly Regex regex = new(@"Место нахождения(?<space>.*?)>\n(?<space>.*?)\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                return value;
+            }
+        }
+
+        public sealed class Security {
+            private static readonly Regex regex = new(@"Размер обеспечения исполнения контракта(?<space>.*?)>\n(?<space>.*?)>\n(?<space>.*?)\n(?<space>.*?)\n(?<space>.*?)\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                value = value.Replace("&nbsp;", " ");
+                return value;
+            }
+        }
+
+        public sealed class UTC {
+            private static readonly Regex regex = new(@"\(UTC(?<val>.*?)\)", options);
+
+            public static string GetString(string input) {
+                string value = "—";
+                try {
+                    value = $"{regex.Split(input)[1]}";
+                }
+                catch { }
                 return value;
             }
         }
