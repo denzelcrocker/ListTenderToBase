@@ -8,6 +8,7 @@ namespace ListTenderToBase {
 
     internal class Program {
         static void Main(string[] args) {
+            ListSource.ListSource ls = new ListSource.ListSource();
             Procurement procurement = new Procurement();
             Platform platform = new Platform();
             Organization organization = new Organization();
@@ -15,13 +16,13 @@ namespace ListTenderToBase {
             Method method = new Method();
             Act act = new Act();
             using (ApplicationContext db = new ApplicationContext()) {
-                procurement.Number = ListSource.ListSource.listProcurement[0];
-                procurement.Address = ListSource.ListSource.listProcurement[1];
+                procurement.Number = ls[0];
+                procurement.Address = ls[1];
                 var methodElement = db.Methods.ToList();
                 bool isMethodExists = true;
                 foreach (Method u in methodElement) {
-                    if (u.NameOfMethod == ListSource.ListSource.listProcurement[2]) {
-                        procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == ListSource.ListSource.listProcurement[2]).FirstOrDefault().MethodId;
+                    if (u.NameOfMethod == ls[2]) {
+                        procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == ls[2]).FirstOrDefault().MethodId;
                         isMethodExists = true;
                         break;
                     }
@@ -30,16 +31,16 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isMethodExists == false) {
-                    method.NameOfMethod = ListSource.ListSource.listProcurement[2];
+                    method.NameOfMethod = ls[2];
                     db.Methods.AddRange(method);
                     db.SaveChanges();
-                    procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == ListSource.ListSource.listProcurement[2]).FirstOrDefault().MethodId;
+                    procurement.MethodId = db.Methods.ToList().Where(x => x.NameOfMethod == ls[2]).FirstOrDefault().MethodId;
                 }
                 var actElement = db.Acts.ToList();
                 bool isActExists = true;
                 foreach (Act u in actElement) {
-                    if (u.NameOfAct == ListSource.ListSource.listProcurement[3]) {
-                        procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == ListSource.ListSource.listProcurement[3]).FirstOrDefault().ActId;
+                    if (u.NameOfAct == ls[3]) {
+                        procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == ls[3]).FirstOrDefault().ActId;
                         isActExists = true;
                         break;
                     }
@@ -48,16 +49,16 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isActExists == false) {
-                    act.NameOfAct = ListSource.ListSource.listProcurement[3];
+                    act.NameOfAct = ls[3];
                     db.Acts.AddRange(act);
                     db.SaveChanges();
-                    procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == ListSource.ListSource.listProcurement[3]).FirstOrDefault().ActId;
+                    procurement.ActId = db.Acts.ToList().Where(x => x.NameOfAct == ls[3]).FirstOrDefault().ActId;
                 }
                 var platformElement = db.Platforms.ToList();
                 bool isPlatformExists = true;
                 foreach (Platform u in platformElement) {
-                    if (u.NameOfPlatform == ListSource.ListSource.listProcurement[4] && u.AddressOfPlatform == ListSource.ListSource.listProcurement[5]) {
-                        procurement.PlatformId = db.Platforms.ToList().Where(x => x.NameOfPlatform == ListSource.ListSource.listProcurement[4]).FirstOrDefault().PlatformId;
+                    if (u.NameOfPlatform == ls[4] && u.AddressOfPlatform == ls[5]) {
+                        procurement.PlatformId = db.Platforms.ToList().Where(x => x.NameOfPlatform == ls[4]).FirstOrDefault().PlatformId;
                         isPlatformExists = true;
                         break;
                     }
@@ -66,20 +67,20 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isPlatformExists == false) {
-                    platform.NameOfPlatform = ListSource.ListSource.listProcurement[4];
-                    platform.AddressOfPlatform = ListSource.ListSource.listProcurement[5];
+                    platform.NameOfPlatform = ls[4];
+                    platform.AddressOfPlatform = ls[5];
                     db.Platforms.AddRange(platform);
                     db.SaveChanges();
-                    procurement.PlatformId = db.Platforms.ToList().Where(x => x.NameOfPlatform == ListSource.ListSource.listProcurement[4]).FirstOrDefault().PlatformId;
+                    procurement.PlatformId = db.Platforms.ToList().Where(x => x.NameOfPlatform == ls[4]).FirstOrDefault().PlatformId;
                 }
                 var timeZoneElement = db.TimeZones.ToList();
                 bool isTimeZoneExists = true;
-                if (ListSource.ListSource.listProcurement[16] == "") {
-                    ListSource.ListSource.listProcurement[16] = "0";
+                if (ls[16] == "") {
+                    ls[16] = "0";
                 }
                 foreach (TimeZone u in timeZoneElement) {
-                    if (u.Code == Convert.ToInt16(ListSource.ListSource.listProcurement[16])) {
-                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ListSource.ListSource.listProcurement[16])).FirstOrDefault().TimeZoneId;
+                    if (u.Code == Convert.ToInt16(ls[16])) {
+                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ls[16])).FirstOrDefault().TimeZoneId;
                         isTimeZoneExists = true;
                         break;
                     }
@@ -88,16 +89,16 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isTimeZoneExists == false) {
-                    timeZone.Code = Convert.ToInt16(ListSource.ListSource.listProcurement[16]);
+                    timeZone.Code = Convert.ToInt16(ls[16]);
                     db.TimeZones.AddRange(timeZone);
                     db.SaveChanges();
-                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ListSource.ListSource.listProcurement[16])).FirstOrDefault().TimeZoneId;
+                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ls[16])).FirstOrDefault().TimeZoneId;
                 }
                 var organizationElement = db.Organizations.ToList();
                 bool isOrganizationExists = true;
                 foreach (Organization u in organizationElement) {
-                    if (u.NameOfOrganization == ListSource.ListSource.listProcurement[9] && u.AddressOfOrganization == ListSource.ListSource.listProcurement[10]) {
-                        procurement.OrganizationId = db.Organizations.ToList().Where(x => x.NameOfOrganization == ListSource.ListSource.listProcurement[9]).FirstOrDefault().OrganizationId;
+                    if (u.NameOfOrganization == ls[9] && u.AddressOfOrganization == ls[10]) {
+                        procurement.OrganizationId = db.Organizations.ToList().Where(x => x.NameOfOrganization == ls[9]).FirstOrDefault().OrganizationId;
                         isOrganizationExists = true;
                         break;
                     }
@@ -106,20 +107,20 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isOrganizationExists == false) {
-                    organization.NameOfOrganization = ListSource.ListSource.listProcurement[9];
-                    organization.AddressOfOrganization = ListSource.ListSource.listProcurement[10];
+                    organization.NameOfOrganization = ls[9];
+                    organization.AddressOfOrganization = ls[10];
                     db.Organizations.AddRange(organization);
                     db.SaveChanges();
-                    procurement.OrganizationId = db.Organizations.ToList().Where(x => x.NameOfOrganization == ListSource.ListSource.listProcurement[9]).FirstOrDefault().OrganizationId;
+                    procurement.OrganizationId = db.Organizations.ToList().Where(x => x.NameOfOrganization == ls[9]).FirstOrDefault().OrganizationId;
                 }
-                procurement.DeadlineStart = Convert.ToDateTime(ListSource.ListSource.listProcurement[6]);
-                procurement.DeadlineEnd = Convert.ToDateTime(ListSource.ListSource.listProcurement[7]);
-                procurement.InitialPrice = Convert.ToDecimal(ListSource.ListSource.listProcurement[8]);
-                procurement.ProcurementObject = ListSource.ListSource.listProcurement[11];
-                procurement.PlaceOfDelivery = ListSource.ListSource.listProcurement[12];
-                procurement.SupplyAssurance = ListSource.ListSource.listProcurement[13];
-                procurement.Enforcement = ListSource.ListSource.listProcurement[14];
-                procurement.ProvidingAguarantee = ListSource.ListSource.listProcurement[15];
+                procurement.DeadlineStart = Convert.ToDateTime(ls[6]);
+                procurement.DeadlineEnd = Convert.ToDateTime(ls[7]);
+                procurement.InitialPrice = Convert.ToDecimal(ls[8]);
+                procurement.ProcurementObject = ls[11];
+                procurement.PlaceOfDelivery = ls[12];
+                procurement.SupplyAssurance = ls[13];
+                procurement.Enforcement = ls[14];
+                procurement.ProvidingAguarantee = ls[15];
                 db.Procurements.AddRange(procurement);
                 db.SaveChanges();
             }

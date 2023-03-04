@@ -1,5 +1,5 @@
 ﻿namespace ListSource {
-    public class ListSource {
+    public class ListSource : List<string> {
         public static RegexOptions options = RegexOptions.Compiled | RegexOptions.Singleline;
         public static List<string> listProcurement = new()
         {
@@ -54,6 +54,8 @@
             listProcurement[14] = Security.GetString(input);
             listProcurement[15] = "";
             listProcurement[16] = UTC.GetString(input);
+
+            AddRange(listProcurement);
         }
 
 
