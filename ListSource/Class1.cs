@@ -28,7 +28,7 @@
             while (true) {
                 try {
                     using HttpClient httpClient = new();
-                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0288100000223000010").Result;
+                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0378200001223000015").Result;
 
                     break;
                 }

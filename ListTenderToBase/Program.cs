@@ -79,8 +79,8 @@ namespace ListTenderToBase {
                     ls[16] = "0";
                 }
                 foreach (TimeZone u in timeZoneElement) {
-                    if (u.Code == Convert.ToInt16(ls[16])) {
-                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ls[16])).FirstOrDefault().TimeZoneId;
+                    if (u.Code == ls[16]) {
+                        procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == ls[16]).FirstOrDefault().TimeZoneId;
                         isTimeZoneExists = true;
                         break;
                     }
@@ -89,10 +89,10 @@ namespace ListTenderToBase {
                     }
                 }
                 if (isTimeZoneExists == false) {
-                    timeZone.Code = Convert.ToInt16(ls[16]);
+                    timeZone.Code = ls[16];
                     db.TimeZones.AddRange(timeZone);
                     db.SaveChanges();
-                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == Convert.ToInt16(ls[16])).FirstOrDefault().TimeZoneId;
+                    procurement.TimeZoneId = db.TimeZones.ToList().Where(x => x.Code == ls[16]).FirstOrDefault().TimeZoneId;
                 }
                 var organizationElement = db.Organizations.ToList();
                 bool isOrganizationExists = true;
