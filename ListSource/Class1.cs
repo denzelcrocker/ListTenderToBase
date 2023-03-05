@@ -28,7 +28,7 @@
             while (true) {
                 try {
                     using HttpClient httpClient = new();
-                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0378200001223000015").Result;
+                    bytes = httpClient.GetByteArrayAsync("https://zakupki.gov.ru/epz/order/notice/ea20/view/common-info.html?regNumber=0332300185023000007").Result;
 
                     break;
                 }
@@ -50,9 +50,9 @@
             listProcurement[10] = PostAddress.GetString(input);
             listProcurement[11] = Objects.GetString(input);
             listProcurement[12] = Location.GetString(input);
-            listProcurement[13] = "";
+            listProcurement[13] = SupplyAssurance.GetString(input);
             listProcurement[14] = Security.GetString(input);
-            listProcurement[15] = "";
+            listProcurement[15] = ProvidingAguarantee.GetString(input);
             listProcurement[16] = UTC.GetString(input);
 
             AddRange(listProcurement);
@@ -247,6 +247,22 @@
                 return value;
             }
         }
+        public sealed class SupplyAssurance
+        {
+            private static readonly Regex regex = new(@"Размер обеспечения заявки(?<space>.*?)>\n(?<space>.*?)>\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input)
+            {
+                string value = "—";
+                try
+                {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                value = value.Replace("&nbsp;", " ");
+                return value;
+            }
+        }
 
         public sealed class UTC {
             private static readonly Regex regex = new(@"\(UTC(?<val>.*?)\)", options);
@@ -257,6 +273,22 @@
                     value = $"{regex.Split(input)[1]}";
                 }
                 catch { }
+                return value;
+            }
+        }
+        public sealed class ProvidingAguarantee
+        {
+            private static readonly Regex regex = new(@"Размер обеспечения гарантийных обязательств(?<space>.*?)>\n(?<space>.*?)>\n *(?<val>.*?)\n", options);
+
+            public static string GetString(string input)
+            {
+                string value = "—";
+                try
+                {
+                    value = $"{regex.Split(input)[2]}";
+                }
+                catch { }
+                value = value.Replace("&nbsp;", " ");
                 return value;
             }
         }
